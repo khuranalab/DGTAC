@@ -74,33 +74,9 @@ do
 done
 wait
 
-#################################################################
-# Step 4. (OPTIONAL) Calculate coefficient for all peaks around 1 Mb of a given region
-## - To run faster, genes are splited into small files, in total 32 splits.
-## - in total 6*32 jobs, peak, bin1~5
-## - regress new data with source data in case the new data set has too little smaples
-
-###### need to revise later ############## start ############
-#for splitNum in $(seq 1 32)
-#do
-#    echo $splitNum
-#    cp "calFeatureCoef_peakLog_splitExp.sh" "calFeatureCoef_peakLog_split${splitNum}.sh"
-#    sed -i -e "s/Z/${splitNum}/g" "calFeatureCoef_peakLog_split${splitNum}.sh"
-#
-#    chmod +x "calFeatureCoef_peakLog_split${splitNum}.sh"
-#    sbatch "calFeatureCoef_peakLog_split${splitNum}.sh"
-#
-#done
-#
-### - Merge splited coefficients in coefOutSplit into peakLog, bin1~5.
-#
-#./combineCoefOut_peakLog.sh
-#./combineCoefOut_bin.sh
-#python mergeCoef.py
-###### need to revise later ############## end ############
 
 #################################################################
-# Step 5. Merge cnv file with ATAC-seq cnv and batch correct
+# Step 4. Merge cnv file with ATAC-seq cnv and batch correct
 
 python $PWD/scripts/cna2mergedCNA.py $PWD/$cnaMatrix
 Rscript --vanilla $PWD/scripts/batchCorrect.R $PWD/.tmp/cnaMerged.csv $PWD/.tmp/cnaAdjusted.csv
@@ -138,27 +114,3 @@ done
 python $PWD/scripts/collectPeak2GeneInd.py 0.5
 
 
-
-#################################################################
-#################################################################
-###       Following content are for downsteam analysis        ###
-###           -- Not directly included in the pipeline        ###
-#################################################################
-#################################################################
-
-#################################################################
-# Step 7. Extract sample dataframe for peak-gene link of interests.
-## - Output into linkSelect_df folder
-
-mkdir linkSelect_df
-sampleList=sampleList.txt
-sample_list=($(grep -vE '^sample' $PWD/$sampleList | cut -d',' -f 1))
-echo $sample_list
-
-for sample in "${sample_list[@]}"
-do
-    (
-    python $PWD/scripts/patientSelectLink_df.py "${sample}"
-    )&
-    sleep 10s
-done
