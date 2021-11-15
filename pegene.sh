@@ -2,7 +2,7 @@
 
 #################################################################
 #################################################################
-###       Protocol for pegene pipeline for additional samples ###
+###       Protocol for DGTAC pipeline for additional samples ###
 ###                  -- Erica is a genius                     ###
 #################################################################
 #################################################################
@@ -35,7 +35,7 @@ mkdir $PWD/output
 
 #################################################################
 ## Usage ########################################################
-## Usage: pegene.sh sampleList.csv peakCpm.csv bigwigFolder expressionTpm.csv cnvMatrix.csv finalModel.sav
+## Usage: DGTAC.sh sampleList.csv peakCpm.csv bigwigFolder expressionTpm.csv cnvMatrix.csv finalModel.sav
 ## Output prediction matrix will be output into your working directory
 #################################################################
 
